@@ -44,7 +44,7 @@ describe('01-strings-tasks', function() {
     });
 
     it.optional('removeFirstOccurrences should remove all specified values from a string', function() {
-        assert.equal('To be or to be', tasks.removeFirstOccurrences('To be or not to be', ' not'));
+        assert.equal('To be or to be', tasks.removeFirstOccurrences('To be or not to be', 'not'));
         assert.equal('I like legs', tasks.removeFirstOccurrences('I like legends', 'end'));
         assert.equal('ABAB', tasks.removeFirstOccurrences('ABABAB','BA'));
     });
