@@ -22,7 +22,7 @@
  *   '',  'bb'  => 'bb'
  */
 function concatenateStrings(value1, value2) {
-    throw new Error('Not implemented');
+    return value1 + value2;
 }
 
 
@@ -38,7 +38,7 @@ function concatenateStrings(value1, value2) {
  *   ''      => 0
  */
 function getStringLength(value) {
-    throw new Error('Not implemented');
+    return value.length;
 }
 
 /**
@@ -55,7 +55,7 @@ function getStringLength(value) {
  *   'Chuck','Norris'  => 'Hello, Chuck Norris!'
  */
 function getStringFromTemplate(firstName, lastName) {
-    throw new Error('Not implemented');
+    return `Hello, ${firstName} ${lastName}!`
 }
 
 /**
@@ -69,7 +69,16 @@ function getStringFromTemplate(firstName, lastName) {
  *   'Hello, Chuck Norris!' => 'Chuck Norris'
  */
 function extractNameFromTemplate(value) {
-    throw new Error('Not implemented');
+    value = removeExclamatoryFromEnd(value);
+    return extractName(value);
+}
+
+function removeExclamatoryFromEnd(value) {
+    return value.slice(0, value.length - 1);
+}
+
+function extractName(value) {
+    return value.slice(7);
 }
 
 
@@ -84,7 +93,7 @@ function extractNameFromTemplate(value) {
  *   'cat'       => 'c'
  */
 function getFirstChar(value) {
-    throw new Error('Not implemented');
+    return value.slice(0, 1);
 }
 
 /**
@@ -99,7 +108,7 @@ function getFirstChar(value) {
  *   '\tHello, World! ' => 'Hello, World!'
  */
 function removeLeadingAndTrailingWhitespaces(value) {
-    throw new Error('Not implemented');
+    return value.trim();
 }
 
 /**
@@ -114,7 +123,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   'cat', 3 => 'catcatcat'
  */
 function repeatString(value, count) {
-    throw new Error('Not implemented');
+    return value.repeat(count);
 }
 
 /**
@@ -130,7 +139,26 @@ function repeatString(value, count) {
  *   'ABABAB','BA' => 'ABAB'
  */
 function removeFirstOccurrences(str, value) {
-    throw new Error('Not implemented');
+    var strArray = str.split(" ");
+    for(var index = 0; index < strArray.length; index++) {
+        let string = strArray[index];
+        var firstOccurIndex = string.indexOf(value);
+        if (firstOccurIndex !== -1) {
+            strArray[index] = removeValueOccurence(string, value, firstOccurIndex);
+        }
+    }
+    strArray = removeEmptyStringsFromArray(strArray);
+    return strArray.join(" ");
+}
+
+function removeValueOccurence(string, value, firstOccurIndex) {
+    var firstPart = string.slice(0, firstOccurIndex);
+    var secondPart = string.slice(firstOccurIndex + value.length);
+    return firstPart + secondPart;
+}
+
+function removeEmptyStringsFromArray(strArray) {
+    return strArray.filter(string => string != "");
 }
 
 /**
@@ -145,7 +173,7 @@ function removeFirstOccurrences(str, value) {
  *   '<a>' => 'a'
  */
 function unbracketTag(str) {
-    throw new Error('Not implemented');
+    return str.slice(1).slice(0, str.length - 2);
 }
 
 
@@ -160,7 +188,7 @@ function unbracketTag(str) {
  *  'abcdefghijklmnopqrstuvwxyz' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
  */
 function convertToUpperCase(str) {
-    throw new Error('Not implemented');
+    return str.toUpperCase();
 }
 
 /**
@@ -174,7 +202,7 @@ function convertToUpperCase(str) {
  *   'info@gmail.com' => ['info@gmail.com']
  */
 function extractEmails(str) {
-    throw new Error('Not implemented');
+    return str.split(";");
 }
 
 /**
@@ -200,8 +228,38 @@ function extractEmails(str) {
  *             '└──────────┘\n'
  *
  */
+const UPPER = {left: "┌", middle: "─", right: "┐"};
+const MIDDLE = {left: "│", middle: " ", right: "│"};
+const BOTTOM = {left: "└", middle: "─", right: "┘"};
+const NEW_LINE = "\n";
 function getRectangleString(width, height) {
-    throw new Error('Not implemented');
+    var rectangle = "";
+    rectangle += getTopBorder(width, height);
+    var middleBorder = getMiddleBorder(width, height);
+    rectangle += middleBorder.repeat(height - 2);
+    rectangle += getBottomBorder(width, height);
+    return rectangle;
+}
+
+function getTopBorder(width, length) {
+    return getBorder(width, length, UPPER);
+}
+
+function getMiddleBorder(width, length) {
+    return getBorder(width, length, MIDDLE);
+}
+
+function getBottomBorder(width, length) {
+    return getBorder(width, length, BOTTOM);
+}
+
+function getBorder(width, length, borderSeperators) {
+    var border = "";
+    border += borderSeperators.left;
+    border += borderSeperators.middle.repeat(width - 2);
+    border += borderSeperators.right;
+    border += NEW_LINE;
+    return border;
 }
 
 
@@ -221,7 +279,33 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-    throw new Error('Not implemented');
+    var encryptedString = "";
+    for(var index = 0; index < str.length; index++) {
+        var ascii = str.charCodeAt(index);
+        if(!((ascii >= 65 && ascii <= 90) || (ascii >= 97 && ascii <= 122))) {
+            encryptedString += str.charAt(index);
+        } else {
+            var newAscii = getNewAscii(ascii);
+            encryptedString += String.fromCharCode(newAscii);
+        }
+    }
+    return encryptedString;
+}
+
+function getNewAscii(ascii) {
+    if (ascii >= 65 && ascii <= 90) {
+        if(ascii + 13 > 90) {
+            return 65 + (ascii + 13 - 90 -1);
+        } else {
+            return ascii + 13;
+        }
+    } else {
+        if(ascii + 13 > 122) {
+            return 97 + (ascii + 13 - 122 - 1);
+        } else {
+            return ascii + 13;
+        }
+    }
 }
 
 /**
@@ -238,7 +322,10 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-    throw new Error('Not implemented');
+    if (typeof value === "object") {
+        return value instanceof String;
+    }
+    return (typeof value === "string");
 }
 
 
@@ -267,9 +354,41 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-    throw new Error('Not implemented');
+    var number = value.length === 3 ? value.slice(0, 2) :value.charAt(0);
+    var symbol = value.length === 3 ? value.charAt(2) : value.charAt(1);
+    var row = getRowNumber(symbol);
+    var column = getColumnNumber(number);
+    return row * 13 + column;
 }
 
+function getRowNumber(symbol) {
+    switch(symbol) {
+        case "♣":
+            return 0;
+        case "♦":
+            return 1;
+        case '♥':
+            return 2;
+        case "♠":
+            return 3;
+    }
+}
+
+function getColumnNumber(number) {
+    if(!isNaN(Number(number))) {
+        return Number(number) - 1;
+    }
+    switch(number) {
+        case "A":
+            return 0;
+        case "J":
+            return 10;
+        case "Q":
+            return 11;
+        case "K":
+            return 12;
+    }
+}
 
 module.exports = {
     concatenateStrings: concatenateStrings,
