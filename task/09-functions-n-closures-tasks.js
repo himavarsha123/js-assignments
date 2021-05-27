@@ -96,19 +96,12 @@ function getPolynom() {
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
 function memoize(func) {
-    return function(...args) {
+    return function() {
         var argsConcat = func.prototype.constructor;
-        args.forEach(arg => {
-          if(typeof arg === "object") {
-              argsConcat = argsConcat + JSON.stringify(arg);
-          } else {
-              argsConcat = argsConcat + arg.toString();
-          }
-        });
         if(memoize.functionCallsLog.has(argsConcat)) {
           return memoize.functionCallsLog.get(argsConcat);
         } else {
-          let result = func.apply(this, args);
+          let result = func.apply(this);
           memoize.functionCallsLog.set(argsConcat, result);
           return result;
         }
